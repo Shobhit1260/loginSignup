@@ -42,8 +42,8 @@ userSchema.methods.getJwtToken = function (){
         {id :this._id.toString()},
         // @ts-ignore
         process.env.JWT_SECRET,
-        {expiresIn : process.env.JWT_EXPIRES_TIME
-    });
+        {expiresIn : process.env.JWT_EXPIRES_TIME}
+    );
 };
 
 // Compare user password in database password 

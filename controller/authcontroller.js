@@ -7,15 +7,15 @@ const crypto = require('crypto');
 // Register a new user => api/v1/register
 
 exports.registerUser = async(req,res,next)=>
-{   try {
-    const {name,email,password} = req.body;
+{   
+    try {
+    const {email,password} = req.body;
     const user = await User.create({
-        name,
-        email,
-        password,
+         email,
+         password,
     });
-
-     sendToken(user,200,res);
+    console.log("user",user);
+    sendToken(user,200,res);
 } catch (error) {
     next(error);
 }
@@ -41,11 +41,9 @@ exports.loginUser = async(req,res,next)=>{
 
     //  Check if password is correct
     const isPasswordMatched = await user.comparePassword(password);
-    // console.log("--password--",isPasswordMatched)
     if(!isPasswordMatched){
         return next(new ErrorHandler('Invalid Email or Password.',401))
     }
-    // console.log("----User---",user);
      sendToken(user,200,res);
    
 }
@@ -65,8 +63,7 @@ exports.forgotPassword = async (req,res,next)=>{
     // Get reset token
     const resetToken = user.getResetPasswordToken();
     await user.save({ validateBeforeSave: false });
-    console.log("Reset Password Token saved in DB:", user.resetPasswordToken);
-    console.log("Unhashed reset token:", resetToken);
+    
    
 
     //  Create reset password url
@@ -131,7 +128,6 @@ catch(error){
 
 // Logout user => /api/v1/logout
 exports.logout = async(req,res,next)=>{
-    console.log("----User---",req.user);
     try{
     res.cookie('token','none',{
         expires : new Date(Date.now()),
